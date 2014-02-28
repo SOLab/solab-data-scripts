@@ -32,5 +32,5 @@ for i = 1:length(granules)
     
     % вывод данных
     % data output
-    disp(selection{i}) 
+    disp(selection{i})  
 end
