@@ -28,6 +28,11 @@ for i = 0:nvars-1
             attname_ = attname(2:end);
         else attname_ = attname;
         end
+
+        if (attname_(end)== ':')
+            attname_ = attname_(1:end-1);
+        end
+
         % make structure.(varname).(attname_) an empty structure to avoid warnings
         structure.(varname).(attname_) = struct;
         structure.(varname).(attname_) = attname;
@@ -48,6 +53,8 @@ for i = 0:nvars-1
             attval_ = attval_(2:end);
         else attval_ = attval_;
         end
+        attval_;
+        
 %         attval(strfind('_', char(attval))) = '';
 %         make structure.(varname).attval an empty structure to avoid warnings
 %         structure.(varname).(['attval_' char(attval_)]) = struct;
