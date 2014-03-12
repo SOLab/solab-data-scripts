@@ -49,11 +49,14 @@ for i = 0:nvars-1
         attval_(strfind('/', attval_)) = '_';
         attval_(strfind('(', attval_)) = '_';
         attval_(strfind(')', attval_)) = '_';
-        if (strfind('_', char(attval_(1))) ~= 0)
+        
+        if isempty(attval_) 
+            attval_ = '';
+        elseif (strfind('_', char(attval_(1))) ~= 0)
             attval_ = attval_(2:end);
-        else attval_ = attval_;
+        else 
+            attval_ = attval_;
         end
-        attval_;
         
 %         attval(strfind('_', char(attval))) = '';
 %         make structure.(varname).attval an empty structure to avoid warnings
