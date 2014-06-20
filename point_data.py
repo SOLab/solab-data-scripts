@@ -23,6 +23,7 @@ points_list = [(-13, -10), (-12.5, -10), (-12, -9.5), (-12, -9), (-11.3, -8.6),
                (-11, -8), (-10, -7), (-7, -6.5), (-76, -36), (-80, -5), (-85, 40)]
 hide_null_values = True
 variables = ['wind_speed', 'sst', 'atmosphere_water_vapor_content', 'icecon']
+xlsx_path = 'DataArray.xlsx'
 
 # find the nearest element indexes
 def do_kdtree(combined_x_y_arrays,points):
@@ -584,7 +585,7 @@ def ice_workflow(worksheet, num_row):
 if __name__ == '__main__':
     try:
         # create xlsx file
-        workbook = xlsxwriter.Workbook('DataArray.xlsx')
+        workbook = xlsxwriter.Workbook(xlsx_path)
         
         if 'wind_speed' in variables:
             # add list for variable
