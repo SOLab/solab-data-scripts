@@ -6,7 +6,7 @@ Created on Tue Jun 17 12:52:52 2014
 """
 
 from xml.dom import minidom
-import os
+import os, time
 import re
 import urllib
 import xlsxwriter
@@ -18,9 +18,14 @@ import numpy.ma as ma
 from scipy import spatial
 import datetime
 
-years = [2011, 2014]
-points_list = [(-13, -10), (-12.5, -10), (-12, -9.5), (-12, -9), (-11.3, -8.6), 
-               (-11, -8), (-10, -7), (-7, -6.5), (-76, -36), (-80, -5), (-85, 40)]
+years = range(1981, 2015)
+
+points_list = [(69.195083, 36.455687), (70.053546, 56.100371),
+               (73.493434, 69.196073), (76.498797, 88.728638),
+               (77.797734, 99.802856), (76.302474, 120.237426),
+               (73.212920, 132.604476), (72.957205, 143.722640),
+               (70.538282, 169.782209), (66.599172, -169.673357)]
+
 hide_null_values = True
 variables = ['wind_speed', 'sst', 'atmosphere_water_vapor_content', 'icecon']
 xlsx_path = 'DataArray.xlsx'
@@ -79,6 +84,7 @@ def wind_speed_handler(granule, granule_date, worksheet, num_row):
     except KeyboardInterrupt:
         raise KeyboardInterrupt
     except:
+        time.sleep(2)
         return num_row
     
     lat = dataset['lat'][:]
@@ -190,7 +196,10 @@ def wind_speed_workflow(worksheet, num_row):
 
             day_cat = os.path.join(year_cat, day_name)
             day_xml = os.path.join(day_cat, 'catalog.xml')
-            daydoc = minidom.parse(urllib.urlopen(day_xml))
+	    try:
+                daydoc = minidom.parse(urllib.urlopen(day_xml))
+	    except:
+	        pass
             datasets_item_list = daydoc.getElementsByTagName('thredds:dataset')
     
             for _dataset in datasets_item_list:
@@ -230,6 +239,7 @@ def sst_handler(granule, granule_date, worksheet, num_row):
     except KeyboardInterrupt:
         raise KeyboardInterrupt
     except:
+        time.sleep(2)
         return num_row
     
     lat = dataset['lat'][:]
@@ -322,8 +332,11 @@ def sst_workflow(worksheet, num_row):
                     granule_path = os.path.join(year_cat, dataset_name)
                     print 'Start granule: %s' %granule_path
         
-                    num_row = sst_handler(granule_path, granule_date,
+                    try:
+                        num_row = sst_handler(granule_path, granule_date,
                                                  worksheet, num_row)
+                    except:
+                        pass
 
 
 # atmosphere_water_vapor_content
@@ -350,6 +363,7 @@ def water_vapor_handler(granule, granule_date, worksheet, num_row):
     except KeyboardInterrupt:
         raise KeyboardInterrupt
     except:
+        time.sleep(2)
         return num_row
 
     lat = dataset['latitude'][:]
@@ -447,8 +461,12 @@ def water_vapor_workflow(worksheet, num_row):
                 granule_path = os.path.join(year_cat, dataset_name)
                 print 'Start granule: %s' %granule_path
     
-                num_row = water_vapor_handler(granule_path, granule_date,
+                try:
+                    num_row = water_vapor_handler(granule_path, granule_date,
                                              worksheet, num_row)
+                except:
+                    pass
+
 # ICE
 def ice_read_parameter_value(dataset, pp_name):
     fill_value = dataset[pp_name]._FillValue
@@ -468,6 +486,7 @@ def ice_handler(granule, granule_date, worksheet, num_row):
     except KeyboardInterrupt:
         raise KeyboardInterrupt
     except:
+        time.sleep(2)
         return num_row
 
     lat = dataset['latitude'][:]
@@ -579,8 +598,11 @@ def ice_workflow(worksheet, num_row):
                 granule_path = os.path.join(year_cat, dataset_name)
         
                 print 'Start granule: %s' %granule_path
-                num_row = ice_handler(granule_path, granule_date,
+                try:
+                    num_row = ice_handler(granule_path, granule_date,
                                                          worksheet, num_row)
+                except:
+                    pass
 
 if __name__ == '__main__':
     try:
@@ -625,3 +647,4 @@ if __name__ == '__main__':
         pass
     finally:
         workbook.close()
+
